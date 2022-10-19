@@ -1,0 +1,26 @@
+span {
+	display: inline-block;
+	width: 5em;
+	background : rgb(226, 226, 226);
+}
+
+.boxes{
+	max-width: 100%;
+	background-color: #ccc;
+  }
+
+  
+.box{
+	display: inline-block;
+	width: 30%;
+  }
+  
+.red{
+	height : 100%;
+	background-color: #FF0D1F;
+}
+
+.blue{
+	height : 100%;
+	background-color: #0026FF;
+}
