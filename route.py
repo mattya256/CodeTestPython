@@ -1,12 +1,18 @@
 from flask import Flask, request,render_template
 import CodeTest_python 
-import time 
+
 
 app = Flask(__name__)
 
 @app.route("/codetest", methods=['GET', 'POST'])
 def route_codetest_main():
-    result,answer,RC,codecoler,variable_timechange = CodeTest_python.M_264910_test(request.form["inputcode"],request.form["testcase"])
+    try:
+        request.form["VDB"]
+        VDB = True
+    except Exception as e:
+        VDB = False
+    
+    result,answer,RC,codecoler,variable_timechange = CodeTest_python.M_264910_test(request.form["inputcode"],request.form["testcase"],VDB)
     return render_template('CodeTest/CT_main.html',\
     message_result = result , \
     message_answer = answer , \

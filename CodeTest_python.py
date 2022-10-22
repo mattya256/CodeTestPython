@@ -79,11 +79,11 @@ class M_264910_ReturnCode:
     修正前のコードと修正後のコードを保持するクラス
     """
     def __init__(self,Str,Str2):
-        self.OringinalCode = Str
+        self.OriginalCode = Str
         self.RemakeCode = Str2
 
 M_264910_testcase_count
-def M_264910_test(M_264910_inputcode,M_264910_input_testcase):
+def M_264910_test(M_264910_inputcode,M_264910_input_testcase,VDB):
     # テストケースをテキストで入力
     # inputした回数を記録しておき、コード内で適切な入力を取り出すための変数
     global M_264910_testcase_count
@@ -91,7 +91,7 @@ def M_264910_test(M_264910_inputcode,M_264910_input_testcase):
 
     #pythonに出力されてしまうのでHTMLで使えるよう関数の上書き
     def print(*printtext):
-        M_264910_returnList.append(printtext)
+        M_264910_returnList.append(str(printtext))
 
     # 同様に上書き
     def input():
@@ -107,7 +107,7 @@ def M_264910_test(M_264910_inputcode,M_264910_input_testcase):
     def exit():
         raise M_264910_exit_Exception("error!")
 
-    M_264910_inputcode_remake = M_264910_remakecode(M_264910_inputcode,VDB = True)
+    M_264910_inputcode_remake = M_264910_remakecode(M_264910_inputcode,VDB = VDB)
     M_264910_testcase = M_264910_input_testcase.split("\r\n")
 
     # 入力の行数を保存
@@ -137,14 +137,11 @@ def M_264910_test(M_264910_inputcode,M_264910_input_testcase):
         exec(M_264910_inputcode_remake,M_264910_DICT_copy,M_264910_DICT_copy)
 
         M_264910_TM.FinishTM()
-        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100) + " (s)/r/n"
     except M_264910_exit_Exception as e:
         M_264910_TM.FinishTM()
-        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100) + " (s)/r/n"
     except Exception as e:
         M_264910_returnList = []
         M_264910_returnList.append(traceback.format_exc())
-        M_264910_result = "実行失敗"
 
     try:
         #コードの追加を無視して実行し、正規の実行時間を確認する
@@ -155,9 +152,10 @@ def M_264910_test(M_264910_inputcode,M_264910_input_testcase):
         M_264910_DICT_copy['print'] = M_264910_not_method
         M_264910_Before = time.time() 
         exec(M_264910_inputcode,M_264910_DICT_copy,M_264910_DICT_copy)
-        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100) + " (s)/r/n"
+        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100)
     except M_264910_exit_Exception as e:
-        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100) + " (s)/r/n"
+        pass
+        M_264910_result += "実行完了: " + str(((time.time()-M_264910_Before)*100//1)/100)
     except Exception as e:
         M_264910_returnList = []
         M_264910_returnList.append(traceback.format_exc())
