@@ -6,55 +6,72 @@
 <link rel="stylesheet" href="/static/css/sample.css">
 <html lang="ja">
     <h1>Pythonコード　計算量可視化ツール</h1>
-    <label><input type="checkbox" name="HTMLoutput" value="実行状況" onchange="HTMLoutput();">実行状況</label>
-    <label><input type="checkbox" name="HTMLoutput" value="出力結果" onchange="HTMLoutput();">出力結果</label>
-    <label><input type="checkbox" name="HTMLoutput" value="コード" checked onchange="HTMLoutput();">コード</label>
-    <div id = "HTML_実行状況">
+    <label><input type="checkbox" name="HTMLoutput" value="RunSituation" onchange="HTMLoutput();">実行状況</label>
+    <label><input type="checkbox" name="HTMLoutput" value="OutputResult" onchange="HTMLoutput();">出力結果</label>
+    <label><input type="checkbox" name="HTMLoutput" value="Code" checked onchange="HTMLoutput();">コード</label>
+    <div id = "HTML_RunSituation">
         <h2>実行状況</h2>
         <div>{{ message_result }}</div>
     </div>
     
-    <div id = "HTML_出力結果">
-    <h1>出力結果</h1>
-        {% for line in message_answer %}
-        <div>{{ line }}</div>
-        {% endfor %}
+    <div id = "HTML_OutputResult">
+        <h1>出力結果</h1>
+        <div>
+            {% for line in message_answer %}
+            <div>{{ line }}</div>
+            {% endfor %}
+        </div>
     </div>
 
-    <div class = "boxes" id = "HTML_コード">
+    <h2>コード</h2>
+    <label><input type="radio" name="Code_ferture" value="RunTime" checked onchange="HTMLoutput();">実行時間</label>
+
+    <label><input type="radio" name="Code_ferture" value="RunTime" checked onchange="HTMLoutput();">実行時間</label>
+    <label><input type="radio" name="Code_ferture" value="Count" onchange="HTMLoutput();">出現回数</label>
+    <label><input type="radio" name="Code_ferture" value="Time_per_Count" onchange="HTMLoutput();">一回当たりの実行時間</label>
+    <label><input type="radio" name="Code_ferture" value="Remake" onchange="HTMLoutput();">修正後のコード(デバック用)</label>
+            
+    <div class = "boxes" id = "HTML_Code">
         <div class="box red">
-            <h2>コード</h2>
-            <label><input type="radio" name="Code_ferture" value="実行時間" onchange="HTMLoutput();">実行時間</label>
-            <label><input type="radio" name="Code_ferture" value="出現回数" onchange="HTMLoutput();">出現回数</label>
-            <label><input type="radio" name="Code_ferture" value="一回当たりの実行時間" checked onchange="HTMLoutput();">一回当たりの実行時間</label>
-            <label><input type="radio" name="Code_ferture" value="修正後" checked onchange="HTMLoutput();">修正後のコード(デバック用)</label>
-            <div id = "コード_実行時間">
-            コード_実行時間
-            {% for line in message_codecolor.time_sum_color %}
-            <div style = "{{line}}"><span>{{message_codecolor.time_sum[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
-            {% endfor %}
+            <div id = "Code_RunTime">
+                <div style = "border-bottom: 2px solid;" >行辺りの合計実行時間(s),コード</div>
+                {% for line in message_codecolor.time_sum_color %}
+                <div style = "{{line}}" id ="Code_RunTime_{{loop.index0}}"><span>{{message_codecolor.time_sum[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
+                {% endfor %}
             </div>
-            <div id = "コード_出現回数">
-            コード_出現回数
-            {% for line in message_codecolor.count_sum_color %}
-            <div style = "{{line}}"><span>{{message_codecolor.count_sum[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
-            {% endfor %}
+            <div id = "Code_Count">
+                <div style = "border-bottom: 2px solid;" >その行の出現回数(回),コード</div>
+                {% for line in message_codecolor.count_sum_color %}
+                <div style = "{{line}}" id ="Code_Count_{{loop.index0}}"><span>{{message_codecolor.count_sum[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
+                {% endfor %}
             </div>
-            <div id = "コード_一回当たりの実行時間">
-            コード_一回当たりの実行時間
-            {% for line in message_codecolor.time_per_count_color %}
-            <div style = "{{line}}"><span>{{message_codecolor.time_per_count[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
-            {% endfor %}
+            <div id = "Code_Time_per_Count">
+                <div style = "border-bottom: 2px solid;" >一回当たりの実行時間(s/回),コード</div>
+                {% for line in message_codecolor.time_per_count_color %}
+                <div style = "{{line}}" id ="Code_Time_per_Count_{{loop.index0}}"><span>{{message_codecolor.time_per_count[loop.index0]}}</span>{{ message_code.OringinalCode[loop.index0] }}</div>
+                {% endfor %}
             </div>
-            <div id = "コード_修正後">
-            コード_一回当たりの実行時間
-            {% for line in message_code.RemakeCode %}
-            <div><span>{{loop.index0+1}}</span>{{ message_code.RemakeCode[loop.index0] }}</div>
-            {% endfor %}
+            <div id = "Code_Remake">
+                <div style = "border-bottom: 2px solid;" >行数,修正後のコード</div>
+                {% for line in message_code.RemakeCode %}
+                <div><span>{{loop.index0+1}}</span>{{ message_code.RemakeCode[loop.index0] }}</div>
+                {% endfor %}
             </div>
         </div>
         <div class="box blue">
-            pass
+            <button onclick = "countdown();">
+                前へ
+            </button>
+            <div id="pagecount" style="display: inline"></div>
+            <button onclick = "countup()">
+                次へ
+            </button>
+            {% for line in message_variable_timechange %}
+                <div name = "Valiable_G" id = "Valiable_G_{{loop.index0+1}}_{{line.CodeNum}}">グローバル変数一覧:{{line.Global_VariableDict}}</div>
+                <div name = "Valiable_L" id = "Valiable_L_{{loop.index0+1}}_{{line.CodeNum}}">ローカル変数一覧:{{line.Local_VariableDict}}</div>
+                <div name = "Valiable_GC" id = "Valiable_GC_{{loop.index0+1}}_{{line.CodeNum}}">グローバル変数変更:{{line.Global_changeDict}}</div>
+                <div name = "Valiable_LC" id = "Valiable_LC_{{loop.index0+1}}_{{line.CodeNum}}">ローカル変数変更:{{line.Local_changeDict}}</div>
+            {% endfor %}
         </div>
     </div>
 
@@ -88,19 +105,109 @@
     }
     reshape()
 
+    let count = 1
+    let beforebool = false
+    const S_CodeLine_RunTime = document.getElementById("Code_RunTime_0")
+    const S_CodeLine_Count = document.getElementById("Code_Count_0")
+    const S_CodeLine_Time_per_Count = document.getElementById("Code_Time_per_Count_0")
+    let before_RunTime = S_CodeLine_RunTime.style.backgroundColor
+    let before_Count = S_CodeLine_Count.style.backgroundColor
+    let before_Time_per_Count = S_CodeLine_Time_per_Count.style.backgroundColor
+
+    function countdown(){
+        count -= 1
+        changepage(1)
+    }
+
+    function countup(){
+        count += 1
+        changepage(-1)
+    }
+
+    function changepage(u_d){
+        document.getElementById('pagecount').innerHTML = count ;
+        const element = document.getElementsByName("Valiable_GC");
+        for(let i = 0; i < element.length; ++i){
+            if (i+1 == count){
+                element[i].style.display = "block"
+                try{
+                    const CodeLine_before_RunTime = document.getElementById("Code_RunTime_"+element[i+u_d].id.split("_")[3])
+                    CodeLine_before_RunTime.style.backgroundColor = before_RunTime;
+
+                    const CodeLine_before_Count = document.getElementById("Code_Count_"+element[i+u_d].id.split("_")[3])
+                    CodeLine_before_Count.style.backgroundColor = before_Count;
+
+                    const CodeLine_before_Time_per_Count = document.getElementById("Code_Time_per_Count_"+element[i+u_d].id.split("_")[3])
+                    CodeLine_before_Time_per_Count.style.backgroundColor = before_Time_per_Count;
+
+                    beforebool = true
+                }catch{
+                    beforebool = false
+                }
+
+                try{                              
+                    const CodeLine_RunTime = document.getElementById("Code_RunTime_"+element[i].id.split("_")[3])
+                    const CodeLine_Count = document.getElementById("Code_Count_"+element[i].id.split("_")[3])
+                    const CodeLine_Time_per_Count = document.getElementById("Code_Time_per_Count_"+element[i].id.split("_")[3])
+                
+                    if(beforebool){
+                        before_RunTime = CodeLine_RunTime.style.backgroundColor
+                        before_Count = CodeLine_Count.style.backgroundColor
+                        before_Time_per_Count = CodeLine_Time_per_Count.style.backgroundColor
+                    }
+                    CodeLine_RunTime.style.backgroundColor = "rgb(162, 163, 255)";
+                    CodeLine_Count.style.backgroundColor = "rgb(162, 163, 255)";
+                    CodeLine_Time_per_Count.style.backgroundColor = "rgb(162, 163, 255)";
+                }catch{}
+
+            }else{
+                element[i].style.display = "None"
+            }
+        }
+        const element2 = document.getElementsByName("Valiable_LC");
+        for(let i = 0; i < element2.length; ++i){
+            if (i+1 == count){
+                element2[i].style.display = "block"
+            }else{
+                element2[i].style.display = "None"
+            }
+        }
+        const element3 = document.getElementsByName("Valiable_G");
+        for(let i = 0; i < element3.length; ++i){
+            if (i+1 == count){
+                element3[i].style.display = "block"
+            }else{
+                element3[i].style.display = "None"
+            }
+        }
+        const element4 = document.getElementsByName("Valiable_L");
+        for(let i = 0; i < element4.length; ++i){
+            if (i+1 == count){
+                element4[i].style.display = "block"
+            }else{
+                element4[i].style.display = "None"
+            }
+        }
+    }
+    changepage()
+
     function HTMLoutput(){
         const x = document.getElementsByName("HTMLoutput");
         for(let i = 0; i < x.length; ++i){
             const element = document.getElementById("HTML_"+x[i].value);
             if (x[i].checked){
-                element.style.display = "block"
+                if ("HTML_"+x[i].value == "HTML_Code"){
+                    element.style.display = "flex"
+                }else{
+                    element.style.display = "block"
+                }
             }else{
                 element.style.display = "none"
             }
         }
         const y = document.getElementsByName("Code_ferture");
         for(let i = 0; i < y.length; ++i){
-            const element = document.getElementById("コード_"+y[i].value);
+            const element = document.getElementById("Code_"+y[i].value);
             if (y[i].checked){
                 element.style.display = "block"
             }else{

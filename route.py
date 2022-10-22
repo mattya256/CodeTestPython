@@ -6,14 +6,13 @@ app = Flask(__name__)
 
 @app.route("/codetest", methods=['GET', 'POST'])
 def route_codetest_main():
-    print("c",time.time())
-    result,answer,RC,codecoler = CodeTest_python.M_264910_test(request.form["inputcode"],request.form["testcase"])
-    print("d",time.time())
+    result,answer,RC,codecoler,variable_timechange = CodeTest_python.M_264910_test(request.form["inputcode"],request.form["testcase"])
     return render_template('CodeTest/CT_main.html',\
     message_result = result , \
     message_answer = answer , \
     message_code = RC , \
     message_codecolor = codecoler , \
+    message_variable_timechange = variable_timechange, \
     save = {"inputcode" : request.form["inputcode"] , \
             "testcase" : request.form["testcase"] , \
             "cols" : request.form["colsSlider"] , \
@@ -24,6 +23,7 @@ def form():
     return render_template('CodeTest/CT_main.html',message = "",\
         message_code = None , \
         message_codecolor = None , \
+        message_variable_timeChange = None , \
         save = {"inputcode" : "", \
             "testcase" : "" , \
             "cols" : 100 , \
