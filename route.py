@@ -1,7 +1,6 @@
 from flask import Flask, request,render_template
 import CodeTest_python 
 
-
 app = Flask(__name__)
 
 @app.route("/codetest", methods=['GET', 'POST'])
@@ -35,6 +34,5 @@ def form():
             "cols" : 100 , \
             "row" : 10})
 
-# アプリケーションを動かすためのおまじない
 if __name__ == "__main__":
     app.run(port = 8000, debug=True)
